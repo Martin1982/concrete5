@@ -5,8 +5,12 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 	const ASET_ALLOW_NONE = 0;
 	const ASET_ALLOW_SINGLE = 1;
 	const ASET_ALLOW_MULTIPLE = 2;
-	
-	public static function getByID($akCategoryID) {
+
+    /**
+     * @param $akCategoryID
+     * @return AttributeKeyCategory
+     */
+    public static function getByID($akCategoryID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
 		if (isset($row['akCategoryID'])) {
@@ -15,8 +19,12 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 			return $akc;
 		}
 	}
-	
-	public static function getByHandle($akCategoryHandle) {
+
+    /**
+     * @param $akCategoryHandle
+     * @return AttributeKeyCategory
+     */
+    public static function getByHandle($akCategoryHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
 		if (isset($row['akCategoryID'])) {
@@ -25,14 +33,21 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 			return $akc;
 		}
 	}
-	
-	public function handleExists($akHandle) {
+
+    /**
+     * @param $akHandle
+     * @return bool
+     */
+    public function handleExists($akHandle) {
 		$db = Loader::db();
 		$r = $db->GetOne("select count(akID) from AttributeKeys where akHandle = ? and akCategoryID = ?", array($akHandle, $this->akCategoryID));
 		return $r > 0;
 	}
 
-	public static function exportList($xml) {
+    /**
+     * @param SimpleXMLElement $xml
+     */
+    public static function exportList($xml) {
 		$attribs = self::getList();		
 		$axml = $xml->addChild('attributecategories');
 		foreach($attribs as $akc) {
@@ -42,8 +57,12 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 			$acat->addAttribute('package', $akc->getPackageHandle());
 		}		
 	}
-	
-	public function getAttributeKeyByHandle($akHandle) {
+
+    /**
+     * @param $akHandle
+     * @return mixed
+     */
+    public function getAttributeKeyByHandle($akHandle) {
 		if ($this->pkgID > 0) {
 			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
 		} else {
@@ -56,7 +75,11 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 		return $ak;
 	}
 
-	public function getAttributeKeyByID($akID) {
+    /**
+     * @param $akID
+     * @return mixed
+     */
+    public function getAttributeKeyByID($akID) {
 		if ($this->pkgID > 0) {
 			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
 		} else {
@@ -69,7 +92,10 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 		return $ak;
 	}
 
-	public function getUnassignedAttributeKeys() {
+    /**
+     * @return array
+     */
+    public function getUnassignedAttributeKeys() {
 		$db = Loader::db();
 		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akIsInternal = 0 and akCategoryID = ?', $this->akCategoryID);
 		$keys = array();
@@ -78,9 +104,13 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 			$keys[] = $cat->getAttributeKeyByID($row['akID']);
 		}
 		return $keys;		
-	}	
+	}
 
-	public static function getListByPackage($pkg) {
+    /**
+     * @param $pkg
+     * @return array
+     */
+    public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories where pkgID = ? order by akCategoryID asc', array($pkg->getPackageID()));
@@ -145,8 +175,11 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 		$this->rescanSetDisplayOrder();
 		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
 	}
-	
-	public static function getList() {
+
+    /**
+     * @return array
+     */
+    public static function getList() {
 		$db = Loader::db();
 		$cats = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories order by akCategoryID asc');

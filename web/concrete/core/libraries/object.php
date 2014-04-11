@@ -10,16 +10,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 *
 */
 	class Concrete5_Library_Object {
-	
-		public $error = '';
+
+        /**
+         * @var string
+         */
+        public $error = '';
 		
 		/* TODO: move these into an error class */
-		
-		function loadError($error) {
+
+        /**
+         * @param int $error
+         */
+        function loadError($error) {
 			$this->error = $error;
 		}
-		
-		function isError() {
+
+        /**
+         * @return bool|string
+         */
+        function isError() {
 			$args = func_get_args();
 			if (isset($args[0]) && $args[0]) {
 				return $this->error == $args[0];
@@ -27,25 +36,39 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $this->error;
 			}
 		}
-		
-		function getError() {
+
+        /**
+         * @return int
+         */
+        function getError() {
 			return $this->error;
 		}
-		
-		public function setPropertiesFromArray($arr) {
+
+        /**
+         * @param array $arr
+         */
+        public function setPropertiesFromArray($arr) {
 			foreach($arr as $key => $prop) {
 				$this->{$key} = $prop;
 			}
 		}
-		
-		public static function camelcase($file) {
+
+        /**
+         * @param string $file
+         * @return string
+         */
+        public static function camelcase($file) {
 			// turns "asset_library" into "AssetLibrary"
 			$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $file));
 			$r2 = str_replace(' ', '', $r1);
 			return $r2;		
 		}
 
-		public static function uncamelcase($string) {
+        /**
+         * @param string $string
+         * @return string
+         */
+        public static function uncamelcase($string) {
 			$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
 			$a = array();
 			array_shift($v);

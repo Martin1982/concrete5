@@ -277,7 +277,10 @@
 		}
 		
 		/** 
-		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
+		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's
+         * directory, it will load the site's first, which could then extend the core.
+         * @param string $file
+         * @param bool $pkgHandle
 		 */
 		public static function helper($file, $pkgHandle = false) {
 		
@@ -367,10 +370,12 @@
 				return $path;
 			}
 		}
-		
-		/** 
-		 * Loads a controller for either a page or view
-		 */
+
+     /**
+      * Loads a controller for either a page or view
+      * @param string|Page|Block|BlockType $item
+      * @return \Controller
+      */
 		public static function controller($item) {
 			
 			$include = false;
