@@ -228,16 +228,22 @@
 			require(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-xmlschema03.inc.php');
 			require(DIR_BASE_CORE . '/libraries/database.php');
 		}
-		
-		/** 
-		 * Returns the database object, or loads it if not yet created
-		 * <code>
-		 * <?php
-		 * $db = Loader::db();
-		 * $db->query($sql);
-		 * </code>
-		 * @return ADOConnection
-		 */
+
+     /**
+      * Returns the database object, or loads it if not yet created
+      * <code>
+      * <?php
+      * $db = Loader::db();
+      * $db->query($sql);
+      * </code>
+      * @param null|string $server
+      * @param null|string $username
+      * @param null|string $password
+      * @param null|string $database
+      * @param bool $create
+      * @param bool $autoconnect
+      * @return ADOConnection
+      */
 		public static function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
 			static $_dba;
 			if ((!isset($_dba) || $create) && ($autoconnect)) {
@@ -281,6 +287,7 @@
          * directory, it will load the site's first, which could then extend the core.
          * @param string $file
          * @param bool $pkgHandle
+         * @return object
 		 */
 		public static function helper($file, $pkgHandle = false) {
 		

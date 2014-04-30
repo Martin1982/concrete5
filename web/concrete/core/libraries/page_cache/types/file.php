@@ -2,9 +2,16 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Class Concrete5_Library_FilePageCache
+ */
 class Concrete5_Library_FilePageCache extends PageCache {
 
-	public function getRecord($mixed) {
+    /**
+     * @param $mixed
+     * @return mixed
+     */
+    public function getRecord($mixed) {
 		$file = $this->getCacheFile($mixed);
 		if (file_exists($file)) {
 			$contents = file_get_contents($file);
@@ -15,7 +22,11 @@ class Concrete5_Library_FilePageCache extends PageCache {
 		}
 	}
 
-	protected function getCacheFile($mixed) {
+    /**
+     * @param $mixed
+     * @return string
+     */
+    protected function getCacheFile($mixed) {
 		$key = $this->getCacheKey($mixed);
 		$filename = $key . '.cache';
 		if ($key) {
@@ -34,26 +45,39 @@ class Concrete5_Library_FilePageCache extends PageCache {
 		}
 	}
 
-	public function purgeByRecord(PageCacheRecord $rec) {
+    /**
+     * @param PageCacheRecord $rec
+     */
+    public function purgeByRecord(PageCacheRecord $rec) {
 		$file = $this->getCacheFile($rec);
 		if ($file && file_exists($file)) {
 			@unlink($file);
 		}
 	}
 
-	public function flush() {
+    /**
+     *
+     */
+    public function flush() {
 		$fh = Loader::helper("file");
 		$fh->removeAll(DIR_FILES_PAGE_CACHE);
 	}
 
-	public function purge(Page $c) {
+    /**
+     * @param Page $c
+     */
+    public function purge(Page $c) {
 		$file = $this->getCacheFile($c);
 		if ($file && file_exists($file)) {
 			@unlink($file);
 		}
 	}
 
-	public function set(Page $c, $content) {
+    /**
+     * @param Page $c
+     * @param $content
+     */
+    public function set(Page $c, $content) {
 		if (!is_dir(DIR_FILES_PAGE_CACHE)) {
 			@mkdir(DIR_FILES_PAGE_CACHE);
 			@touch(DIR_FILES_PAGE_CACHE . '/index.html');

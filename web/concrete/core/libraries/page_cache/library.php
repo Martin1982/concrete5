@@ -2,11 +2,20 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Class Concrete5_Library_PageCache
+ */
 abstract class Concrete5_Library_PageCache {
 
-	static $library;
+    /**
+     * @var
+     */
+    static $library;
 
-	public function deliver(PageCacheRecord $record) {
+    /**
+     * @param PageCacheRecord $record
+     */
+    public function deliver(PageCacheRecord $record) {
 		if (defined('APP_CHARSET')) {
 			header("Content-Type: text/html; charset=" . APP_CHARSET);
 		}
@@ -17,7 +26,10 @@ abstract class Concrete5_Library_PageCache {
 		print($record->getCacheRecordContent());
 	}
 
-	public static function getLibrary() {
+    /**
+     * @return mixed
+     */
+    public static function getLibrary() {
 		if (!PageCache::$library) {
 			$class = Loader::helper('text')->camelcase(PAGE_CACHE_LIBRARY) . 'PageCache';
 			PageCache::$library = new $class();
@@ -35,13 +47,20 @@ abstract class Concrete5_Library_PageCache {
 		return true;
 	}
 
-	public function outputCacheHeaders(Page $c) {
+    /**
+     * @param Page $c
+     */
+    public function outputCacheHeaders(Page $c) {
 		foreach ($this->getCacheHeaders($c) as $header) {
 			header($header);
 		}
 	}
 
-	public function getCacheHeaders(Page $c) {
+    /**
+     * @param Page $c
+     * @return array
+     */
+    public function getCacheHeaders(Page $c) {
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
 		$expires  = gmdate('D, d M Y H:i:', time() + $lifetime) . ' GMT';
 
@@ -55,7 +74,11 @@ abstract class Concrete5_Library_PageCache {
 		return $headers;
 	}
 
-	public function shouldAddToCache(View $v) {
+    /**
+     * @param View $v
+     * @return bool
+     */
+    public function shouldAddToCache(View $v) {
 		$c = $v->getCollectionObject();
 		if (!is_object($c)) {
 			return false;
@@ -112,7 +135,11 @@ abstract class Concrete5_Library_PageCache {
 		return true;
 	}
 
-	public function getCacheKey($mixed) {
+    /**
+     * @param Page|Request|PageCacheRecord $mixed
+     * @return string
+     */
+    public function getCacheKey($mixed) {
 		if ($mixed instanceof Page) {
 			if ($mixed->getCollectionPath() != '') {
 				return urlencode(trim($mixed->getCollectionPath(), '/'));
@@ -146,10 +173,34 @@ abstract class Concrete5_Library_PageCache {
 	}
 	*/
 
-	abstract public function getRecord($mixed);
-	abstract public function set(Page $c, $content);
-	abstract public function purgeByRecord(PageCacheRecord $rec);
-	abstract public function purge(Page $c);
-	abstract public function flush();
+    /**
+     * @param $mixed
+     * @return mixed
+     */
+    abstract public function getRecord($mixed);
+
+    /**
+     * @param Page $c
+     * @param $content
+     * @return mixed
+     */
+    abstract public function set(Page $c, $content);
+
+    /**
+     * @param PageCacheRecord $rec
+     * @return mixed
+     */
+    abstract public function purgeByRecord(PageCacheRecord $rec);
+
+    /**
+     * @param Page $c
+     * @return mixed
+     */
+    abstract public function purge(Page $c);
+
+    /**
+     * @return mixed
+     */
+    abstract public function flush();
 
 }

@@ -81,20 +81,22 @@ class Concrete5_Library_Events {
 			);
 		}
 	}
-	/**
-	 * When passed an "event" as a string (e.g. "on_user_add"), a user-defined method can be run whenever this event
-	 * takes place.
-	 * <code>
-	 * Events::extend('on_user_add', 'MySpecialClass', 'createSpecialUserInfo', 'models/my_special_class.php', array('foo' => 'bar'))
-	 * </code>
-	 * @param string $event
-	 * @param string $class
-	 * @param string $method
-	 * @param string $filename
-	 * @param array $params
-	 * $param int $priority
-	 * @return void
-	 */
+
+    /**
+     * When passed an "event" as a string (e.g. "on_user_add"), a user-defined method can be run whenever this event
+     * takes place.
+     * <code>
+     * Events::extend('on_user_add', 'MySpecialClass', 'createSpecialUserInfo', 'models/my_special_class.php', array('foo' => 'bar'))
+     * </code>
+     * @param string $event
+     * @param string $class
+     * @param string $method
+     * @param string $filename
+     * @param array $params
+     * $param int $priority
+     * @param int $priority
+     * @return void
+     */
 	public static function extend($event, $class, $method='', $filename='', $params = array(), $priority = 5) {
 		Events::enableEvents();
 		$ce = Events::getInstance();

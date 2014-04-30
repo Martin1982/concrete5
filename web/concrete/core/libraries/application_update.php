@@ -2,17 +2,40 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Class Concrete5_Library_ApplicationUpdate
+ */
 class Concrete5_Library_ApplicationUpdate {
 
-	protected $version;
-	protected $identifier;
-	
-	const E_UPDATE_WRITE_CONFIG = 10;
-	
-	public function getUpdateVersion() {return $this->version;}
-	public function getUpdateIdentifier() {return $this->identifier;}
-	
-	public static function getByVersionNumber($version) {
+    /**
+     * @var
+     */
+    protected $version;
+    /**
+     * @var
+     */
+    protected $identifier;
+
+    /**
+     *
+     */
+    const E_UPDATE_WRITE_CONFIG = 10;
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateVersion() {return $this->version;}
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateIdentifier() {return $this->identifier;}
+
+    /**
+     * @param $version
+     * @return mixed
+     */
+    public static function getByVersionNumber($version) {
 		$upd = new Update();
 		$updates = $upd->getLocalAvailableUpdates();
 		foreach($updates as $up) {
@@ -46,9 +69,13 @@ class Concrete5_Library_ApplicationUpdate {
 		}
 		
 		return true;
-	}	
-	
-	public function get($dir) {
+	}
+
+    /**
+     * @param string $dir
+     * @return ApplicationUpdate
+     */
+    public function get($dir) {
 		$APP_VERSION = false;
 		// given a directory, we figure out what version of the system this is
 		$version = DIR_APP_UPDATES . '/' . $dir . '/' . DIRNAME_APP . '/config/version.php';

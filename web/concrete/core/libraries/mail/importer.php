@@ -19,16 +19,25 @@ class Concrete5_Library_MailImporter extends Object {
 		return t('--- Reply ABOVE. Do not alter this line --- [' . $this->validationHash  . '] ---');
 	}
 
-	public function getValidationHash() {
+    /**
+     * @return mixed
+     */
+    public function getValidationHash() {
 		return $this->validationHash;
 	}
-	
 
-	public function getMessageBodyHashRegularExpression() {
+
+    /**
+     * @return string
+     */
+    public function getMessageBodyHashRegularExpression() {
 		return t('/\-\-\- Reply ABOVE\. Do not alter this line \-\-\- \[(.*)\] \-\-\-/i');
 	}
 
-	public function getList() {
+    /**
+     * @return array
+     */
+    public function getList() {
 		$db = Loader::db();
 		$r = $db->Execute('select miID from MailImporters order by miID asc');
 		$importers = array();
@@ -38,7 +47,10 @@ class Concrete5_Library_MailImporter extends Object {
 		return $importers;
 	}
 
-	public function getEnabledList() {
+    /**
+     * @return array
+     */
+    public function getEnabledList() {
 		$db = Loader::db();
 		$r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
 		$importers = array();
@@ -47,8 +59,12 @@ class Concrete5_Library_MailImporter extends Object {
 		}
 		return $importers;
 	}
-	
-	public static function getByID($miID) {
+
+    /**
+     * @param $miID
+     * @return mixed
+     */
+    public static function getByID($miID) {
 		$db = Loader::db();
 		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
 		if (isset($row['miID'])) {
@@ -61,18 +77,29 @@ class Concrete5_Library_MailImporter extends Object {
 		}
 	}
 
-	public static function getByHandle($miHandle) {
+    /**
+     * @param $miHandle
+     * @return mixed
+     */
+    public static function getByHandle($miHandle) {
 		$db = Loader::db();
 		$miID = $db->GetOne("select miID from MailImporters where miHandle = ?", $miHandle);
 		return MailImporter::getByID($miID);
 	}
-	
-	public function delete() {
+
+    /**
+     *
+     */
+    public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from MailImporters where miID = ?', array($this->miID));
 	}
-	
-	public static function getListByPackage($pkg) {
+
+    /**
+     * @param $pkg
+     * @return array
+     */
+    public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
 		$r = $db->Execute('select miID from MailImporters where pkgID = ? order by miID asc', array($pkg->getPackageID()));
@@ -81,28 +108,84 @@ class Concrete5_Library_MailImporter extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
-	public function getMailImporterID() {return $this->miID;}
-	public function getMailImporterName() {
+	}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterID() {return $this->miID;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterName() {
 		$txt = Loader::helper('text');
 		return $txt->unhandle($this->miHandle);
 	}
-	public function getMailImporterHandle() {return $this->miHandle;}
-	public function getMailImporterServer() {return $this->miServer;}
-	public function getMailImporterUsername() {return $this->miUsername;}
-	public function getMailImporterPassword() {return $this->miPassword;}
-	public function getMailImporterEncryption() {return $this->miEncryption;}
-	public function getMailImporterEmail() {return $this->miEmail;}
-	public function getMailImporterPort() {return $this->miPort;}
-	public function isMailImporterEnabled() {return $this->miIsEnabled;}
-	public function getMailImporterConnectionMethod() {return $this->miConnectionMethod;}
-	public function getPackageID() { return $this->pkgID;}
-	public function getPackageHandle() {
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterHandle() {return $this->miHandle;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterServer() {return $this->miServer;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterUsername() {return $this->miUsername;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterPassword() {return $this->miPassword;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterEncryption() {return $this->miEncryption;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterEmail() {return $this->miEmail;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterPort() {return $this->miPort;}
+
+    /**
+     * @return mixed
+     */
+    public function isMailImporterEnabled() {return $this->miIsEnabled;}
+
+    /**
+     * @return mixed
+     */
+    public function getMailImporterConnectionMethod() {return $this->miConnectionMethod;}
+
+    /**
+     * @return mixed
+     */
+    public function getPackageID() { return $this->pkgID;}
+
+    /**
+     * @return bool
+     */
+    public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function add($args, $pkg = null) {
+    /**
+     * @param $args
+     * @param null $pkg
+     * @return mixed
+     */
+    public function add($args, $pkg = null) {
 		$db = Loader::db();
 		extract($args);
 		
@@ -142,8 +225,11 @@ class Concrete5_Library_MailImporter extends Object {
 		$miID = $db->Insert_ID();
 		return MailImporter::getByID($miID);
 	}
-	
-	public function update($args) {
+
+    /**
+     * @param $args
+     */
+    public function update($args) {
 		$db = Loader::db();
 		extract($args);
 		
@@ -172,16 +258,28 @@ class Concrete5_Library_MailImporter extends Object {
 				$this->miID
 			));
 	}
-	
-	public function setupBody($body) {
+
+    /**
+     * @param $body
+     * @return string
+     */
+    public function setupBody($body) {
 		return $this->getMessageBodyHeader() . "\n\n" . $body;
 	}
 
-	public function getValidationErrorMessage() {
+    /**
+     * @return string
+     */
+    public function getValidationErrorMessage() {
 		return t('Unable to process email. Check that your email contains the validation hash present in the original message.');
 	}
 
-	public function setupValidation($email, $dataObject) {
+    /**
+     * @param $email
+     * @param $dataObject
+     * @return mixed
+     */
+    public function setupValidation($email, $dataObject) {
 		$db = Loader::db();
 		$h = Loader::helper('validation/identifier');
 		$hash = $h->generate('MailValidationHashes', 'mHash');
@@ -190,8 +288,11 @@ class Concrete5_Library_MailImporter extends Object {
 		$this->validationHash = $hash;
 		return $hash;
 	}
-	
-	public function getPendingMessages() {
+
+    /**
+     * @return array
+     */
+    public function getPendingMessages() {
 		$messages = array();
 		// connect to the server to grab all messages 
 		Loader::library('3rdparty/Zend/Exception');
@@ -224,7 +325,10 @@ class Concrete5_Library_MailImporter extends Object {
 		return $messages;
 	}
 
-	public function cleanup(MailImportedMessage $me) {
+    /**
+     * @param MailImportedMessage $me
+     */
+    public function cleanup(MailImportedMessage $me) {
 		
 		$db = Loader::db();
 		$db->query("update MailValidationHashes set mDateRedeemed = " . time() . " where mHash = ?", array($me->getValidationHash()));
@@ -238,17 +342,46 @@ class Concrete5_Library_MailImporter extends Object {
 	
 }
 
+/**
+ * Class MailImportedMessage
+ */
 class MailImportedMessage {
-	
-	protected $body;
-	protected $subject;
-	protected $sender;
-	protected $validationHash;
-	protected $oMail;
-	protected $oMailMessage;
-	protected $oMailCnt;
-	
-	public function __construct($mail, Zend_Mail_Message $msg, $count) {
+
+    /**
+     * @var string
+     */
+    protected $body;
+    /**
+     * @var string
+     */
+    protected $subject;
+    /**
+     * @var string
+     */
+    protected $sender;
+    /**
+     * @var
+     */
+    protected $validationHash;
+    /**
+     * @var
+     */
+    protected $oMail;
+    /**
+     * @var Zend_Mail_Message
+     */
+    protected $oMailMessage;
+    /**
+     * @var
+     */
+    protected $oMailCnt;
+
+    /**
+     * @param $mail
+     * @param Zend_Mail_Message $msg
+     * @param $count
+     */
+    public function __construct($mail, Zend_Mail_Message $msg, $count) {
 		
 		try {
 			$this->subject = $msg->subject;
@@ -304,14 +437,36 @@ class MailImportedMessage {
 			}
 		}
 	}
-	
-	public function getOriginalSender() {return $this->sender;}
-	public function getOriginalMailObject() {return $this->oMail;}
-	public function getOriginalMessageObject() {return $this->oMailMessage;}
-	public function getOriginalMessageCount() {return $this->oMailCnt;}
-	
-	public function getSubject() {return $this->subject;}
-	public function getBody() {return $this->body;}
+
+    /**
+     * @return string
+     */
+    public function getOriginalSender() {return $this->sender;}
+
+    /**
+     * @return mixed
+     */
+    public function getOriginalMailObject() {return $this->oMail;}
+
+    /**
+     * @return Zend_Mail_Message
+     */
+    public function getOriginalMessageObject() {return $this->oMailMessage;}
+
+    /**
+     * @return mixed
+     */
+    public function getOriginalMessageCount() {return $this->oMailCnt;}
+
+    /**
+     * @return string
+     */
+    public function getSubject() {return $this->subject;}
+
+    /**
+     * @return string
+     */
+    public function getBody() {return $this->body;}
 	
 	/** 
 	 * Returns the relevant content of the email message, minus any quotations, and the line that includes the validation hash
@@ -325,8 +480,11 @@ class MailImportedMessage {
 		), '', $message);
 		return $r;
 	}
-	
-	public function getValidationHash() {return $this->validationHash;}
+
+    /**
+     * @return mixed
+     */
+    public function getValidationHash() {return $this->validationHash;}
 	
 	/** 
 	 * Validates the email message - checks the validation hash found in the body with one in the database. Checks the from address as well
@@ -346,7 +504,10 @@ class MailImportedMessage {
 			//}
 		}
 	}
-	
-	public function getDataObject() {return $this->dataObject;}
+
+    /**
+     * @return mixed
+     */
+    public function getDataObject() {return $this->dataObject;}
 	
 }

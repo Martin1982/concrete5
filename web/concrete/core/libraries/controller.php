@@ -407,9 +407,6 @@ class Concrete5_Library_Controller {
 
 	/** 
 	 * Redirects to a given URL
-	 * @param string $location
-	 * @param string $task
-	 * @param string $params
 	 * @return void
 	 */
 	public function redirect() {
@@ -422,11 +419,12 @@ class Concrete5_Library_Controller {
 		exit;
 	}
 
-	/** 
-	 * Redirects to a given external URL
-	 * @param string $url
-	 * @param string $http_status
-	 */	
+    /**
+     * Redirects to a given external URL
+     * @param string $url
+     * @param bool|string $http_status
+     * @throws Exception
+     */
 	public function externalRedirect($url,$http_status=false) {
 		$url = Loader::helper('security')->sanitizeURL($url);
 		if($this->isValidExternalUrl($url)){
@@ -444,7 +442,7 @@ class Concrete5_Library_Controller {
 	 *
 	 * Placeholder for now
 	 * @param string $url
-	 * @param string $http_status
+     * @return bool
 	 */	
 	public function isValidExternalUrl($url){
 		return true;

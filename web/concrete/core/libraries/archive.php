@@ -83,8 +83,8 @@ class Concrete5_Library_Archive {
 	/**
 	 * Returns either the directory (if the archive itself contains files at the first level) or the subdirectory if, like
 	 * many archiving programs, we the zip archive is a directory, THEN a list of files.
-	 * @param string $directory
-	 * @return string $directory
+	 * @param string $dir
+	 * @return string
 	 */
 	protected function getArchiveDirectory($dir) {
 		// this is necessary to either get the current directory if there are files in it, or the subdirectory if,
@@ -104,7 +104,8 @@ class Concrete5_Library_Archive {
 	 * Installs a zip file from the passed directory
 	 * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it. 
 	 * @param string $zipfile
-	 * @return base directory into which the zipfile was unzipped
+     * @param bool $inplace
+	 * @return string base directory into which the zipfile was unzipped
 	 */
 	protected function install($file, $inplace=false) {
 		if (!$inplace) {

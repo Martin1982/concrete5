@@ -88,12 +88,12 @@ class Concrete5_Library_Request {
 		}
 		return $path;
 	}
-	
-	/**
-	 * Request Constructor that we pass the requested path and then parse to get our tasks
-	 * @param string $path Requested path
-	 * @return void
-	 */
+
+    /**
+     * Request Constructor that we pass the requested path and then parse to get our tasks
+     * @param string $path Requested path
+     * @return \Concrete5_Library_Request
+     */
 	public function __construct($path) {
 		$this->requestPath = $path;
 		$this->parse();

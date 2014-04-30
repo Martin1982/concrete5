@@ -59,7 +59,7 @@ class Concrete5_Library_Environment {
 
 
 	/**
-	 * @access private
+	 * @access protected
 	 */
 	protected $ignoreFiles = array('__MACOSX');
 	
@@ -203,6 +203,9 @@ class Concrete5_Library_Environment {
 	
 	/** 
 	 * Returns a full path to the subpath segment. Returns false if not found
+     * @param $subpath
+     * @param $pkgIdentifier
+     * @return string|false
 	 */
 	public function getPath($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);
@@ -211,6 +214,9 @@ class Concrete5_Library_Environment {
 	
 	/** 
 	 * Returns  a public URL to the subpath item. Returns false if not found
+     * @param $subpath
+     * @param $pkgIdentifier
+     * @return string|false
 	 */
 	public function getURL($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);

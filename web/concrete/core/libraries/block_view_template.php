@@ -24,20 +24,47 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Library_BlockViewTemplate {
 
-	protected $basePath = '';
-	
-	protected $bFilename;
-	protected $btHandle;
-	protected $obj;
-	protected $baseURL;
-	protected $checkHeaderItems = true;
-	protected $itemsToCheck = array(
+    /**
+     * @var string
+     */
+    protected $basePath = '';
+
+    /**
+     * @var
+     */
+    protected $bFilename;
+    /**
+     * @var
+     */
+    protected $btHandle;
+    /**
+     * @var
+     */
+    protected $obj;
+    /**
+     * @var
+     */
+    protected $baseURL;
+    /**
+     * @var bool
+     */
+    protected $checkHeaderItems = true;
+    /**
+     * @var array
+     */
+    protected $itemsToCheck = array(
 		'CSS' => 'view.css', 
 		'JAVASCRIPT' => 'view.js'
 	);
-	protected $render = FILENAME_BLOCK_VIEW;
-	
-	public function __construct($obj) {
+    /**
+     * @var string
+     */
+    protected $render = FILENAME_BLOCK_VIEW;
+
+    /**
+     * @param $obj
+     */
+    public function __construct($obj) {
 		$this->btHandle = $obj->getBlockTypeHandle();
 		$this->obj = $obj;
 		if ($obj instanceof Block) {
@@ -45,8 +72,11 @@ class Concrete5_Library_BlockViewTemplate {
 		}
 		$this->computeView();
 	}
-	
-	protected function computeView() {
+
+    /**
+     *
+     */
+    protected function computeView() {
 		$bFilename = $this->bFilename;
 		$obj = $this->obj;
 		
@@ -151,16 +181,30 @@ class Concrete5_Library_BlockViewTemplate {
 		}
 		$this->template = $template;
 	}
-	
-	
-	public function getBasePath() {return $this->basePath;}
-	public function getBaseURL() {return $this->baseURL;}
-	public function setBlockCustomTemplate($bFilename) {
+
+
+    /**
+     * @return string
+     */
+    public function getBasePath() {return $this->basePath;}
+
+    /**
+     * @return mixed
+     */
+    public function getBaseURL() {return $this->baseURL;}
+
+    /**
+     * @param $bFilename
+     */
+    public function setBlockCustomTemplate($bFilename) {
 		$this->bFilename = $bFilename;
 		$this->computeView();
 	}
-	
-	public function setBlockCustomRender($renderFilename) {
+
+    /**
+     * @param $renderFilename
+     */
+    public function setBlockCustomRender($renderFilename) {
 		// if we've passed in "templates/" as the first part, we strip that off.
 		if (strpos($renderFilename, 'templates/') === 0) {
 			$bFilename = substr($renderFilename, 10);
@@ -170,13 +214,19 @@ class Concrete5_Library_BlockViewTemplate {
 		}
 		$this->computeView();
 	}
-	
-	
-	public function getTemplate() {
+
+
+    /**
+     * @return mixed
+     */
+    public function getTemplate() {
 		return $this->template;
 	}
-	
-	public function getTemplateHeaderItems() {
+
+    /**
+     * @return array
+     */
+    public function getTemplateHeaderItems() {
 		$items = array();
 		$h = Loader::helper("html");
 		$dh = Loader::helper('file');

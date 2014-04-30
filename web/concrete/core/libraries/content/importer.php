@@ -18,11 +18,21 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+/**
+ * Class Concrete5_Library_Content_Importer
+ */
 class Concrete5_Library_Content_Importer {
-	
-	protected static $mcBlockIDs = array();
-	
-	public function importContentFile($file) {
+
+    /**
+     * @var array
+     */
+    protected static $mcBlockIDs = array();
+
+    /**
+     * @param $file
+     */
+    public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
 		$this->importSinglePageStructure($sx);
 		$this->importStacksStructure($sx);
@@ -51,8 +61,12 @@ class Concrete5_Library_Content_Importer {
 		$this->importConfigValues($sx);
 		$this->importSystemCaptchaLibraries($sx);
 	}
-	
-	protected static function getPackageObject($pkgHandle) {
+
+    /**
+     * @param $pkgHandle
+     * @return bool|Package
+     */
+    protected static function getPackageObject($pkgHandle) {
 		$pkg = false;
 		if ($pkgHandle) {
 			$pkg = Package::getByHandle($pkgHandle);
@@ -60,7 +74,10 @@ class Concrete5_Library_Content_Importer {
 		return $pkg;		
 	}
 
-	protected function importStacksStructure(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importStacksStructure(SimpleXMLElement $sx) {
 		if (isset($sx->stacks)) {
 			foreach($sx->stacks->stack as $p) {
 				if (isset($p['type'])) {
@@ -73,7 +90,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importStacksContent(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importStacksContent(SimpleXMLElement $sx) {
 		if (isset($sx->stacks)) {
 			foreach($sx->stacks->stack as $p) {
 				$stack = Stack::getByName($p['name']);
@@ -83,8 +103,11 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importSinglePageStructure(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importSinglePageStructure(SimpleXMLElement $sx) {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = ContentImporter::getPackageObject($p['package']);
@@ -101,7 +124,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importSinglePageContent(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importSinglePageContent(SimpleXMLElement $sx) {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $px) {
 				$page = Page::getByPath($px['path'], 'RECENT');
@@ -120,7 +146,12 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function setupPageNodeOrder($pageNodeA, $pageNodeB) {
+    /**
+     * @param $pageNodeA
+     * @param $pageNodeB
+     * @return int
+     */
+    protected function setupPageNodeOrder($pageNodeA, $pageNodeB) {
 		$pathA = (string) $pageNodeA['path'];
 		$pathB = (string) $pageNodeB['path'];
 		$numA = count(explode('/', $pathA));
@@ -137,8 +168,11 @@ class Concrete5_Library_Content_Importer {
 			return ($numA < $numB) ? -1 : 1;
 		}
 	}
-	
-	protected function importPageContent(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPageContent(SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			foreach($sx->pages->page as $px) {
 				if ($px['path'] != '') {
@@ -161,8 +195,11 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importPageStructure(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPageStructure(SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			$nodes = array();
 			$i = 0;
@@ -209,8 +246,13 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importPageAreas(Page $page, SimpleXMLElement $px) {
+
+    /**
+     * @param Page $page
+     * @param SimpleXMLElement $px
+     * @throws Exception
+     */
+    protected function importPageAreas(Page $page, SimpleXMLElement $px) {
 		foreach($px->area as $ax) {
 			if (isset($ax->block)) {
 				foreach($ax->block as $bx) {
@@ -237,17 +279,28 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	public static function addMasterCollectionBlockID($b, $id) {
+    /**
+     * @param $b
+     * @param $id
+     */
+    public static function addMasterCollectionBlockID($b, $id) {
 		self::$mcBlockIDs[$b->getBlockID()] = $id;
 	}
-	
-	public static function getMasterCollectionTemporaryBlockID($b) {
+
+    /**
+     * @param $b
+     * @return mixed
+     */
+    public static function getMasterCollectionTemporaryBlockID($b) {
 		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
 			return self::$mcBlockIDs[$b->getBlockID()];
 		}
 	}
-	
-	protected function importPageTypesBase(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPageTypesBase(SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
 				$pkg = ContentImporter::getPackageObject($ct['package']);
@@ -264,7 +317,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importPageTypeDefaults(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPageTypeDefaults(SimpleXMLElement $sx) {
 		$db = Loader::db();
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
@@ -281,7 +337,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importBlockTypes(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importBlockTypes(SimpleXMLElement $sx) {
 		if (isset($sx->blocktypes)) {
 			foreach($sx->blocktypes->blocktype as $bt) {
 				if (!is_object(BlockType::getByHandle((string) $bt['handle']))) {
@@ -296,7 +355,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importWorkflowTypes(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importWorkflowTypes(SimpleXMLElement $sx) {
 		if (isset($sx->workflowtypes)) {
 			foreach($sx->workflowtypes->workflowtype as $wt) {
 				$pkg = ContentImporter::getPackageObject($wt['package']);
@@ -309,7 +371,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importAttributeTypes(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importAttributeTypes(SimpleXMLElement $sx) {
 		if (isset($sx->attributetypes)) {
 			foreach($sx->attributetypes->attributetype as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
@@ -331,7 +396,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importPermissionAccessEntityTypes(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPermissionAccessEntityTypes(SimpleXMLElement $sx) {
 		if (isset($sx->permissionaccessentitytypes)) {
 			foreach($sx->permissionaccessentitytypes->permissionaccessentitytype as $pt) {
 				$pkg = ContentImporter::getPackageObject($pt['package']);
@@ -349,8 +417,11 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importPackages(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPackages(SimpleXMLElement $sx) {
 		if (isset($sx->packages)) {
 			foreach($sx->packages->package as $p) {
 				$pkg = Loader::package((string) $p['handle']);
@@ -358,8 +429,11 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importThemes(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importThemes(SimpleXMLElement $sx) {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
@@ -375,7 +449,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importSystemCaptchaLibraries(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importSystemCaptchaLibraries(SimpleXMLElement $sx) {
 		if (isset($sx->systemcaptcha)) {
 			Loader::model('system/captcha/library');
 			foreach($sx->systemcaptcha->library as $th) {
@@ -388,7 +465,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importJobs(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importJobs(SimpleXMLElement $sx) {
 		Loader::model('job');
 		if (isset($sx->jobs)) {
 			foreach($sx->jobs->job as $jx) {
@@ -405,7 +485,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importJobSets(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importJobSets(SimpleXMLElement $sx) {
 		if (isset($sx->jobsets)) {
 			foreach($sx->jobsets->jobset as $js) {
 				$pkg = ContentImporter::getPackageObject($js['package']);
@@ -423,7 +506,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importConfigValues(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importConfigValues(SimpleXMLElement $sx) {
 		if (isset($sx->config)) {
 			$db = Loader::db();
 			$configstore = new ConfigStore($db);
@@ -438,7 +524,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importTaskPermissions(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importTaskPermissions(SimpleXMLElement $sx) {
 		if (isset($sx->taskpermissions)) {
 			foreach($sx->taskpermissions->taskpermission as $tp) {
 				$pkg = ContentImporter::getPackageObject($tp['package']);
@@ -458,7 +547,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importPermissionCategories(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPermissionCategories(SimpleXMLElement $sx) {
 		if (isset($sx->permissioncategories)) {
 			foreach($sx->permissioncategories->category as $pkc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
@@ -467,7 +559,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importWorkflowProgressCategories(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importWorkflowProgressCategories(SimpleXMLElement $sx) {
 		if (isset($sx->workflowprogresscategories)) {
 			foreach($sx->workflowprogresscategories->category as $wpc) {
 				$pkg = ContentImporter::getPackageObject($wpc['package']);
@@ -476,7 +571,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importPermissions(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importPermissions(SimpleXMLElement $sx) {
 		if (isset($sx->permissionkeys)) {
 			foreach($sx->permissionkeys->permissionkey as $pk) {
 				$pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
@@ -505,7 +603,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importAttributeCategories(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importAttributeCategories(SimpleXMLElement $sx) {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
@@ -516,8 +617,11 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
-	protected function importAttributes(SimpleXMLElement $sx) {
+
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importAttributes(SimpleXMLElement $sx) {
 		if (isset($sx->attributekeys)) {
 			foreach($sx->attributekeys->attributekey as $ak) {
 				$akc = AttributeKeyCategory::getByHandle($ak['category']);
@@ -531,7 +635,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importAttributeSets(SimpleXMLElement $sx) {
+    /**
+     * @param SimpleXMLElement $sx
+     */
+    protected function importAttributeSets(SimpleXMLElement $sx) {
 		if (isset($sx->attributesets)) {
 			foreach($sx->attributesets->attributeset as $as) {
 				$akc = AttributeKeyCategory::getByHandle($as['category']);
@@ -547,7 +654,11 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	public static function getValue($value) {
+    /**
+     * @param $value
+     * @return bool|mixed
+     */
+    public static function getValue($value) {
 		if (preg_match('/\{ccm:export:page:(.*)\}|\{ccm:export:file:(.*)\}|\{ccm:export:image:(.*)\}|\{ccm:export:pagetype:(.*)\}/i', $value, $matches)) {
 			if ($matches[1]) {
 				$c = Page::getByPath($matches[1]);

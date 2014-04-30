@@ -38,8 +38,11 @@ class Concrete5_Library_Database {
 		$db = Loader::db();
 		$db->debug = $_debug;
 	}
-	
-	public function getDebug() {
+
+    /**
+     * @return bool
+     */
+    public function getDebug() {
 		$db = Loader::db();
 		return $db->debug;
 	}
@@ -55,7 +58,10 @@ class Concrete5_Library_Database {
 		$ADODB_PERF_MIN = 0;
 	}
 
-	public static function ensureEncoding() {
+    /**
+     * @return bool
+     */
+    public static function ensureEncoding() {
 		if (!defined('DB_CHARSET') || DB_CHARSET == '') { 
 			return false;
 		}

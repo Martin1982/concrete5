@@ -22,42 +22,122 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 
 	class Concrete5_Library_BlockController extends Controller {
-		
-		protected $record; // blockrecord
-		protected $helpers = array('form');
-		protected static $sets;
-		
-		protected $block;
-		protected $btDescription = "";
-		protected $btName = "";
-		protected $btHandle = "";
-		protected $btIsInternal = 0;
-		protected $btActiveWhenAdded = 1;
-		protected $btCopyWhenPropagate = 0;
-		protected $btIncludeAll = 0;
-		protected $dbFile = 'db.xml';
-		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "400";
-		protected $btHasRendered = false;
-		protected $btCacheBlockRecord = false;
-		protected $btCacheBlockOutput = false;
-		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
-		protected $btCacheBlockOutputOnPost = false;
-		protected $btCacheBlockOutputForRegisteredUsers = false;
-		
-		protected $btExportPageColumns = array();
-		protected $btExportFileColumns = array();
-		protected $btExportPageTypeColumns = array();
-		
-		protected $btWrapperClass = '';
-		
-		public $headerItems = array();
-		
-		
 
-		protected $identifier;
-		
-		public function getIdentifier() {
+        /**
+         * @var
+         */
+        protected $record; // blockrecord
+        /**
+         * @var array
+         */
+        protected $helpers = array('form');
+        /**
+         * @var
+         */
+        protected static $sets;
+
+        /**
+         * @var
+         */
+        protected $block;
+        /**
+         * @var string
+         */
+        protected $btDescription = "";
+        /**
+         * @var string
+         */
+        protected $btName = "";
+        /**
+         * @var string
+         */
+        protected $btHandle = "";
+        /**
+         * @var int
+         */
+        protected $btIsInternal = 0;
+        /**
+         * @var int
+         */
+        protected $btActiveWhenAdded = 1;
+        /**
+         * @var int
+         */
+        protected $btCopyWhenPropagate = 0;
+        /**
+         * @var int
+         */
+        protected $btIncludeAll = 0;
+        /**
+         * @var string
+         */
+        protected $dbFile = 'db.xml';
+        /**
+         * @var string
+         */
+        protected $btInterfaceWidth = "400";
+        /**
+         * @var string
+         */
+        protected $btInterfaceHeight = "400";
+        /**
+         * @var bool
+         */
+        protected $btHasRendered = false;
+        /**
+         * @var bool
+         */
+        protected $btCacheBlockRecord = false;
+        /**
+         * @var bool
+         */
+        protected $btCacheBlockOutput = false;
+        /**
+         * @var int
+         */
+        protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
+        /**
+         * @var bool
+         */
+        protected $btCacheBlockOutputOnPost = false;
+        /**
+         * @var bool
+         */
+        protected $btCacheBlockOutputForRegisteredUsers = false;
+
+        /**
+         * @var array
+         */
+        protected $btExportPageColumns = array();
+        /**
+         * @var array
+         */
+        protected $btExportFileColumns = array();
+        /**
+         * @var array
+         */
+        protected $btExportPageTypeColumns = array();
+
+        /**
+         * @var string
+         */
+        protected $btWrapperClass = '';
+
+        /**
+         * @var array
+         */
+        public $headerItems = array();
+
+
+        /**
+         * @var string
+         */
+        protected $identifier;
+
+        /**
+         * @return string
+         */
+        public function getIdentifier() {
 			return $this->identifier;
 		}
 
@@ -70,8 +150,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function set($key, $value) {
 			self::$sets[$this->identifier][$key] = $value;		
 		}
-		
-		public function get($key, $defaultValue = null) {
+
+        /**
+         * @param null|string $key
+         * @param null $defaultValue
+         * @return mixed
+         */
+        public function get($key, $defaultValue = null) {
 			if (isset(BlockController::$sets[$this->identifier][$key])) {
 				return BlockController::$sets[$this->identifier][$key];
 			}
@@ -79,7 +164,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::get($key, $defaultValue);
 		}
 
-		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
+        /**
+         * @return string
+         */
+        public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
 		/** 
 		 * @access private
 		 */
@@ -141,12 +229,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$this->renderOverride = $view;
 		}
-		
-		public function validate($args) {
+
+        /**
+         * @param $args
+         * @return bool
+         */
+        public function validate($args) {
 			return true;
 		}
-		
-		public function getBlockControllerData() {
+
+        /**
+         * @return mixed
+         */
+        public function getBlockControllerData() {
 			return $this->record;
 		}
 		
@@ -192,7 +287,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getPermissionsObject() {
 			return $this->getPermissionObject();
 		}
-				
+
 		/**
 		 * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
 		 * @param int $newBlockID
@@ -209,16 +304,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $newInstance;
 			}
 		}
-		
-		public function __wakeup() {
+
+        /**
+         *
+         */
+        public function __wakeup() {
 			$this->__construct();
 		}
-		
-		public function getBlockTypeDatabaseTable() {
+
+        /**
+         * @return mixed
+         */
+        public function getBlockTypeDatabaseTable() {
 			return $this->btTable;
 		}
-		
-		public function export(SimpleXMLElement $blockNode) {
+
+        /**
+         * @param SimpleXMLElement $blockNode
+         */
+        public function export(SimpleXMLElement $blockNode) {
 
 			$tables[] = $this->getBlockTypeDatabaseTable();
 			if (isset($this->btExportTables)) {
@@ -258,7 +362,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		protected function getImportData($blockNode) {
+        /**
+         * @param $blockNode
+         * @return array
+         */
+        protected function getImportData($blockNode) {
 			$args = array();
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
@@ -274,7 +382,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $args;
 		}
 
-		protected function importAdditionalData($b, $blockNode) {
+        /**
+         * @param $b
+         * @param $blockNode
+         */
+        protected function importAdditionalData($b, $blockNode) {
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
 					if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
@@ -294,8 +406,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 		}
-		
-		public function import($page, $arHandle, SimpleXMLElement $blockNode) {
+
+        /**
+         * @param $page
+         * @param $arHandle
+         * @param SimpleXMLElement $blockNode
+         */
+        public function import($page, $arHandle, SimpleXMLElement $blockNode) {
 			$args = array();
 			$db = Loader::db();
 			// handle the adodb stuff
@@ -313,35 +430,57 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			// we have to do this this way because we need a bID
 			$this->importAdditionalData($b, $blockNode);
 		}
-		
-		public function cacheBlockRecord() {
+
+        /**
+         * @return bool
+         */
+        public function cacheBlockRecord() {
 			return $this->btCacheBlockRecord;
 		}
-		
-		public function cacheBlockOutput() {
+
+        /**
+         * @return bool
+         */
+        public function cacheBlockOutput() {
 			return $this->btCacheBlockOutput;
 		}
 
-		public function cacheBlockOutputForRegisteredUsers() {
+        /**
+         * @return bool
+         */
+        public function cacheBlockOutputForRegisteredUsers() {
 			return $this->btCacheBlockOutputForRegisteredUsers;
 		}
 
-		public function cacheBlockOutputOnPost() {
+        /**
+         * @return bool
+         */
+        public function cacheBlockOutputOnPost() {
 			return $this->btCacheBlockOutputOnPost;
 		}
 
-		public function getBlockTypeCacheOutputLifetime() {
+        /**
+         * @return int
+         */
+        public function getBlockTypeCacheOutputLifetime() {
 			return $this->btCacheBlockOutputLifetime;
 		}
-		
-		public function getCollectionObject() {
+
+        /**
+         * @return Collection|Page
+         */
+        public function getCollectionObject() {
 			if ($this->bActionCID > 0) {
 				return Page::getByID($this->bActionCID);
 			} 
 			return Page::getCurrentPage();
 		}
 
-		public function field($fieldName) {
+        /**
+         * @param $fieldName
+         * @return string
+         */
+        public function field($fieldName) {
 			$field = '_bf[' . $this->identifier;
 			$b = $this->getBlockObject();
 			if (is_object($b)) {
@@ -354,7 +493,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $field;
 		}
 
-		public function post($field = false, $defaultValue = null) {
+        /**
+         * @param bool $field
+         * @param null $defaultValue
+         * @return mixed
+         */
+        public function post($field = false, $defaultValue = null) {
 			// the only post that matters is the one for this attribute's name space
 			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
 			if (is_array($req['_bf'])) {
@@ -445,8 +589,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			parent::__construct();
 			$this->set('controller', $this);
 		}
-		
-		public function outputAutoHeaderItems() {
+
+        /**
+         *
+         */
+        public function outputAutoHeaderItems() {
 			$b = $this->getBlockObject();
 			$bvt = new BlockViewTemplate($b);
 			
@@ -457,14 +604,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 		}
-		
-		public function addHeaderItem($file) {
+
+        /**
+         * @param string $file
+         */
+        public function addHeaderItem($file) {
 			$namespace = 'BLOCK_CONTROLLER_' . strtoupper($this->btHandle);
 			$this->headerItems[$namespace][] = $file;
 			parent::addHeaderItem($file);
 		}
-		
-		public function setupAndRun($method) {
+
+        /**
+         * @param $method
+         */
+        public function setupAndRun($method) {
 			if ($method) {
 				$this->task = $method;
 			}
@@ -579,6 +732,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/** 
 		 * Returns a key/value array of strings that is used to translate items when used in javascript
+         * @return array
 		 */
 		public function getJavaScriptStrings() {
 			return array();

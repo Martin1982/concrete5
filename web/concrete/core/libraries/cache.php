@@ -1,12 +1,23 @@
 <?
 
+/**
+ * Class Concrete5_Library_Cache
+ */
 class Concrete5_Library_Cache {
-	
-	public static function key($type, $id) {
+
+    /**
+     * @param $type
+     * @param $id
+     * @return string
+     */
+    public static function key($type, $id) {
 		return md5($type . $id);
 	}
-	
-	public function getLibrary() {
+
+    /**
+     * @return Zend_Cache_Core|Zend_Cache_Frontend
+     */
+    public function getLibrary() {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
@@ -46,29 +57,45 @@ class Concrete5_Library_Cache {
 		}
 		return $cache;
 	}
-	
-	public function startup() {
+
+    /**
+     *
+     */
+    public function startup() {
 		$cache = Cache::getLibrary();
 	}
-	
-	public function disableCache() {
+
+    /**
+     *
+     */
+    public function disableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
 			$ca->setOption('caching', false);
 		}
 	}
-	
-	public function enableCache() {
+
+    /**
+     *
+     */
+    public function enableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
 			$ca->setOption('caching', true);
 		}
 	}
-	
-	public function disableLocalCache() {
+
+    /**
+     *
+     */
+    public function disableLocalCache() {
 		CacheLocal::get()->enabled = false;
 	}
-	public function enableLocalCache() {
+
+    /**
+     *
+     */
+    public function enableLocalCache() {
 		CacheLocal::get()->enabled = true;
 	}
 	

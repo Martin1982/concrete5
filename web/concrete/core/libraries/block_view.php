@@ -88,11 +88,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return $base;
 		}
-		
-		/** 
-		 * Returns a relative path to the current block's directory. If a filename is specified it will be appended and searched for as well.
-		 * @return string
-		 */
+
+        /**
+         * Returns a relative path to the current block's directory. If a filename is specified it will be appended and searched for as well.
+         * @param string|null $filename
+         * @return string
+         */
 		public function getBlockURL($filename = null) {
 
 			$obj = $this->blockObj;
@@ -148,6 +149,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param Block | BlockType $obj
 		 * @param string $view
 		 * @param array $args
+         * @return bool
 		 */
 		public function render($obj, $view = 'view', $args = array()) {
 			if ($this->hasRendered) {

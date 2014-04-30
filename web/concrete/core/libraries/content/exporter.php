@@ -18,12 +18,25 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+/**
+ * Class Concrete5_Library_Content_Exporter
+ */
 class Concrete5_Library_Content_Exporter {
-	
-	protected $x; // the xml object for export
-	protected static $mcBlockIDs = array();
-	
-	public function run() {
+
+    /**
+     * @var SimpleXMLElement|null
+     */
+    protected $x; // the xml object for export
+    /**
+     * @var array
+     */
+    protected static $mcBlockIDs = array();
+
+    /**
+     *
+     */
+    public function run() {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
 		$this->x->addAttribute('version', '1.0');
 
@@ -92,66 +105,104 @@ class Concrete5_Library_Content_Exporter {
 		Config::exportList($this->x);
 		
 	}
-	
-	public static function addMasterCollectionBlockID($b, $id) {
+
+    /**
+     * @param $b
+     * @param $id
+     */
+    public static function addMasterCollectionBlockID($b, $id) {
 		self::$mcBlockIDs[$b->getBlockID()] = $id;
 	}
-	
-	public static function getMasterCollectionTemporaryBlockID($b) {
+
+    /**
+     * @param $b
+     * @return mixed
+     */
+    public static function getMasterCollectionTemporaryBlockID($b) {
 		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
 			return self::$mcBlockIDs[$b->getBlockID()];
 		}
 	}
-	
-	public function output() {
+
+    /**
+     * @return mixed
+     */
+    public function output() {
 		return $this->x->asXML();
 		
 	}
-	
-	public function getFilesArchive() {
+
+    /**
+     * @return mixed
+     */
+    public function getFilesArchive() {
 		Loader::model('file_list');
 		$vh = Loader::helper("validation/identifier");
 		$archive = $vh->getString();
 		FileList::exportArchive($archive);
 		return $archive;
 	}
-	
-	public static function replacePageWithPlaceHolder($cID) {
+
+    /**
+     * @param $cID
+     * @return string
+     */
+    public static function replacePageWithPlaceHolder($cID) {
 		if ($cID > 0) { 
 			$c = Page::getByID($cID);
 			return '{ccm:export:page:' . $c->getCollectionPath() . '}';
 		}
 	}
 
-	public static function replaceFileWithPlaceHolder($fID) {
+    /**
+     * @param $fID
+     * @return string
+     */
+    public static function replaceFileWithPlaceHolder($fID) {
 		if ($fID > 0) { 
 			$f = File::getByID($fID);
 			return '{ccm:export:file:' . $f->getFileName() . '}';
 		}
 	}
 
-	public static function replacePageWithPlaceHolderInMatch($cID) {
+    /**
+     * @param $cID
+     * @return string
+     */
+    public static function replacePageWithPlaceHolderInMatch($cID) {
 		if ($cID[1] > 0) { 
 			$cID = $cID[1];
 			return self::replacePageWithPlaceHolder($cID);
 		}
 	}
 
-	public static function replaceFileWithPlaceHolderInMatch($fID) {
+    /**
+     * @param $fID
+     * @return string
+     */
+    public static function replaceFileWithPlaceHolderInMatch($fID) {
 		if ($fID[1] > 0) { 
 			$fID = $fID[1];
 			return self::replaceFileWithPlaceHolder($fID);
 		}
 	}
-	
-	public static function replaceImageWithPlaceHolderInMatch($fID) {
+
+    /**
+     * @param $fID
+     * @return string
+     */
+    public static function replaceImageWithPlaceHolderInMatch($fID) {
 		if ($fID > 0) { 
 			$f = File::getByID($fID[1]);
 			return '{ccm:export:image:' . $f->getFileName() . '}';
 		}
 	}
 
-	public static function replacePageTypeWithPlaceHolder($ctID) {
+    /**
+     * @param $ctID
+     * @return string
+     */
+    public static function replacePageTypeWithPlaceHolder($ctID) {
 		if ($ctID > 0) {
 			$ct = CollectionType::getByID($ctID);
 			return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';

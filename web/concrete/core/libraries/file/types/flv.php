@@ -2,9 +2,15 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Class Concrete5_Library_FlvFileTypeInspector
+ */
 class Concrete5_Library_FlvFileTypeInspector extends FileTypeInspector {
-	
-	public function inspect($fv) {
+
+    /**
+     * @param $fv
+     */
+    public function inspect($fv) {
 		
 		$path = $fv->getPath();
 		$at1 = FileAttributeKey::getByHandle('duration');

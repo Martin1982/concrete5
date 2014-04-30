@@ -92,17 +92,17 @@ class Concrete5_Library_FileImporter {
 		@chmod($path, FILE_PERMISSIONS_MODE);
 		return $r;
 	}
-	
-	/** 
-	 * Imports a local file into the system. The file must be added to this path
-	 * somehow. That's what happens in tools/files/importers/.
-	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
-	 * object to that File. If not, we make a new filerecord.
-	 * @param string $pointer path to file
-	 * @param string $filename
-	 * @param FileRecord $fr
-	 * @return number Error Code | FileVersion
-	 */
+
+    /**
+     * Imports a local file into the system. The file must be added to this path
+     * somehow. That's what happens in tools/files/importers/.
+     * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
+     * object to that File. If not, we make a new filerecord.
+     * @param string $pointer path to file
+     * @param bool|string $filename
+     * @param bool|\FileRecord $fr
+     * @return number Error Code | FileVersion
+     */
 	public function import($pointer, $filename = false, $fr = false) {
 		
 		if ($filename == false) {

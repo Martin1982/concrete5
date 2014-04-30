@@ -21,8 +21,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 class Concrete5_Library_FileTypeList {
-	
-	public function getInstance() {
+
+    /**
+     * @return Concrete5_Library_FileTypeList
+     */
+    public function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
 			$v = __CLASS__;
@@ -30,11 +33,26 @@ class Concrete5_Library_FileTypeList {
 		}
 		return $instance;
 	}
-	
-	protected $types = array();
-	protected $importerAttributes = array();
-	
-	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false, $pkgHandle = false) {
+
+    /**
+     * @var array
+     */
+    protected $types = array();
+    /**
+     * @var array
+     */
+    protected $importerAttributes = array();
+
+    /**
+     * @param $extension
+     * @param $name
+     * @param $type
+     * @param bool $customImporter
+     * @param bool $inlineFileViewer
+     * @param bool $editor
+     * @param bool $pkgHandle
+     */
+    public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false, $pkgHandle = false) {
 		$ext = explode(',', $extension);
 		foreach($ext as $e) {
 			$ft = new FileType();
@@ -48,8 +66,14 @@ class Concrete5_Library_FileTypeList {
 			$this->types[$e] = $ft;
 		}
 	}
-	
-	public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable) {
+
+    /**
+     * @param $akHandle
+     * @param $akName
+     * @param $akType
+     * @param $akIsEditable
+     */
+    public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable) {
 		$obj = new stdClass;
 		$obj->akHandle = $akHandle;
 		$obj->akName = $akName;
@@ -57,8 +81,12 @@ class Concrete5_Library_FileTypeList {
 		$obj->akIsEditable = $akIsEditable;		
 		$this->importerAttributes[$akHandle] = $obj;
 	}
-	
-	public function getImporterAttribute($akHandle) {
+
+    /**
+     * @param $akHandle
+     * @return mixed
+     */
+    public function getImporterAttribute($akHandle) {
 		$ftl = FileTypeList::getInstance();
 		return $ftl->importerAttributes[$akHandle];
 	}
@@ -86,33 +114,94 @@ class Concrete5_Library_FileTypeList {
 		
 }
 
+/**
+ * Class Concrete5_Library_FileType
+ */
 class Concrete5_Library_FileType {
 
 	// File Type Constants
-	const T_IMAGE = 1;
-	const T_VIDEO = 2;
-	const T_TEXT = 3;
-	const T_AUDIO = 4;
-	const T_DOCUMENT = 5;
-	const T_APPLICATION = 6;
-	const T_UNKNOWN = 99;
-	
-	public $pkgHandle = false;
-	
-	public function __construct() {
+    /**
+     *
+     */
+    const T_IMAGE = 1;
+    /**
+     *
+     */
+    const T_VIDEO = 2;
+    /**
+     *
+     */
+    const T_TEXT = 3;
+    /**
+     *
+     */
+    const T_AUDIO = 4;
+    /**
+     *
+     */
+    const T_DOCUMENT = 5;
+    /**
+     *
+     */
+    const T_APPLICATION = 6;
+    /**
+     *
+     */
+    const T_UNKNOWN = 99;
+
+    /**
+     * @var bool
+     */
+    public $pkgHandle = false;
+
+    /**
+     *
+     */
+    public function __construct() {
 		$this->type = FileType::T_UNKNOWN;
 		$this->name = $this->mapGenericTypeText($this->type);
 	}
-	
-	public function getPackageHandle() {return $this->pkgHandle;}
-	public function getName() {return $this->name;}
-	public function getExtension() {return $this->extension;}
-	public function getCustomImporter() {return $this->customImporter;}
-	public function getGenericType() {return $this->type;}
-	public function getView() {return $this->view;}	
-	public function getEditor() { return $this->editor;}
-	
-	protected function mapGenericTypeText($type) {
+
+    /**
+     * @return bool
+     */
+    public function getPackageHandle() {return $this->pkgHandle;}
+
+    /**
+     * @return string
+     */
+    public function getName() {return $this->name;}
+
+    /**
+     * @return mixed
+     */
+    public function getExtension() {return $this->extension;}
+
+    /**
+     * @return mixed
+     */
+    public function getCustomImporter() {return $this->customImporter;}
+
+    /**
+     * @return int
+     */
+    public function getGenericType() {return $this->type;}
+
+    /**
+     * @return mixed
+     */
+    public function getView() {return $this->view;}
+
+    /**
+     * @return mixed
+     */
+    public function getEditor() { return $this->editor;}
+
+    /**
+     * @param $type
+     * @return string
+     */
+    protected function mapGenericTypeText($type) {
 		switch($type) {
 			case FileType::T_IMAGE:
 				return t('Image');
@@ -138,16 +227,23 @@ class Concrete5_Library_FileType {
 
 		}
 	}
-	
-	public function getGenericTypeText($type) {
+
+    /**
+     * @param $type
+     * @return string
+     */
+    public function getGenericTypeText($type) {
 		if ($type > 0) {
 			return FileType::mapGenericTypeText($type);
 		} else if (!empty($this->type)) {
 			return FileType::mapGenericTypeText($this->type);		
 		}
 	}
-	
-	public function getCustomInspector() {
+
+    /**
+     * @return mixed
+     */
+    public function getCustomInspector() {
 		$script = 'file/types/' . $this->getCustomImporter();
 		if ($this->pkgHandle != false) {
 			Loader::library($script, $this->pkgHandle);

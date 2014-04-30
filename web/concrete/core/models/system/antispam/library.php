@@ -54,8 +54,11 @@ class Concrete5_Model_SystemAntispamLibrary extends Object {
 		$db = Loader::db();
 		$db->Execute('update SystemAntispamLibraries set saslIsActive = 0');
 	}
-		
-	public static function getList() {
+
+    /**
+     * @return array
+     */
+    public static function getList() {
 		$db = Loader::db();
 		$saslHandles = $db->GetCol('select saslHandle from SystemAntispamLibraries order by saslHandle asc');
 		$libraries = array();
@@ -76,11 +79,14 @@ class Concrete5_Model_SystemAntispamLibrary extends Object {
 		}
 		return $libraries;
 	}
-	
-	public static function exportList($xml) {
+
+    /**
+     * @param SimpleXMLElement $xml
+     */
+    public static function exportList($xml) {
 		$list = self::getList();
 		$nxml = $xml->addChild('systemantispam');
-		
+
 		foreach($list as $sc) {
 			$activated = 0;
 			$type = $nxml->addChild('library');

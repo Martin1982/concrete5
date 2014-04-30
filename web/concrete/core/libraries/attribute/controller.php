@@ -1,48 +1,93 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-	class Concrete5_Library_AttributeTypeController extends Controller {
-		
-		protected $identifier;
-		protected static $sets = array();
-	 	protected $attributeKey;
-		protected $requestArray = false;
-		
-		public function setRequestArray($array) {
+/**
+ * Class Concrete5_Library_AttributeTypeController
+ */
+class Concrete5_Library_AttributeTypeController extends Controller {
+
+    /**
+     * @var
+     */
+    protected $identifier;
+    /**
+     * @var array
+     */
+    protected static $sets = array();
+    /**
+     * @var
+     */
+    protected $attributeKey;
+    /**
+     * @var bool
+     */
+    protected $requestArray = false;
+
+    /**
+     * @param $array
+     */
+    public function setRequestArray($array) {
 			$this->requestArray = $array;
 		}
-		
-	 	public function setAttributeKey($attributeKey) {
+
+    /**
+     * @param $attributeKey
+     */
+    public function setAttributeKey($attributeKey) {
 	 		$this->attributeKey = $attributeKey;
 	 	}
-	 	
-	 	public function setAttributeValue($attributeValue) {
+
+    /**
+     * @param $attributeValue
+     */
+    public function setAttributeValue($attributeValue) {
 	 		$this->attributeValue = $attributeValue;
 	 	}
-	 	
-	 	public function getAttributeKey() {
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeKey() {
 	 		return $this->attributeKey;
 	 	}
 
-	 	public function getAttributeValue() {
+    /**
+     * @return mixed
+     */
+    public function getAttributeValue() {
 	 		return $this->attributeValue;
 	 	}
-	 	
-	 	public function getAttributeType() {
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeType() {
 	 		return $this->attributeType;
 	 	}
-	 	
-	 	public function exportKey($ak) {
+
+    /**
+     * @param $ak
+     * @return mixed
+     */
+    public function exportKey($ak) {
 	 		return $ak;
 	 	}
-	 	
-	 	public function importValue(SimpleXMLElement $akv) {
+
+    /**
+     * @param SimpleXMLElement $akv
+     * @return string
+     */
+    public function importValue(SimpleXMLElement $akv) {
 			if (isset($akv->value)) {
 				return (string) $akv->value;
 			}
 	 	}
-	 	
-	 	public function exportValue(SimpleXMLElement $akv) {
+
+    /**
+     * @param SimpleXMLElement $akv
+     * @return SimpleXMLElement
+     */
+    public function exportValue(SimpleXMLElement $akv) {
 			$val = $this->attributeValue->getValue();
 			if (is_object($val)) {
 				$val = (string) $val;
@@ -54,23 +99,36 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$node->appendChild($no->createCDataSection($val));
 	 		return $cnode;
 	 	}
-	 	
-	 	public function importKey($akn) {
+
+    /**
+     * @param $akn
+     */
+    public function importKey($akn) {
 	 		
 	 	}
-	 	
-	 	
-	 	protected function getAttributeValueID() {
+
+
+    /**
+     * @return mixed
+     */
+    protected function getAttributeValueID() {
 	 		if (is_object($this->attributeValue)) {
 		 		return $this->attributeValue->getAttributeValueID();
 		 	}
 	 	}
-	 	
-		public function field($fieldName) {
+
+    /**
+     * @param $fieldName
+     * @return string
+     */
+    public function field($fieldName) {
 			return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
 		}
 
-		public function label($customText = false) {
+    /**
+     * @param bool $customText
+     */
+    public function label($customText = false) {
 			if ($customText == false) {
 				$text = $this->attributeKey->getAttributeKeyDisplayName();
 			} else {
@@ -78,15 +136,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			print Loader::helper('form')->label($this->field('value'), $text);
 		}
-		
-		public function __construct($attributeType) {
+
+    /**
+     * @param $attributeType
+     */
+    public function __construct($attributeType) {
 			$this->identifier = $attributeType->getAttributeTypeID();
 			$this->attributeType = $attributeType;
 			parent::__construct();
 			$this->set('controller', $this);
 		}
-		
-		public function post($field = false) {
+
+    /**
+     * @param bool $field
+     * @return mixed
+     */
+    public function post($field = false) {
 			// the only post that matters is the one for this attribute's name space
 			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
 			if (is_object($this->attributeKey) && is_array($req['akID'])) {
@@ -99,7 +164,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::post($field);
 		}
 
-		public function request($field = false) {
+    /**
+     * @param bool $field
+     * @return mixed
+     */
+    public function request($field = false) {
 			$req = ($this->requestArray == false) ? $_REQUEST : $this->requestArray;
 			
 			if (is_object($this->attributeKey) && is_array($req['akID'])) {
@@ -112,17 +181,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return parent::request($field);
 		}
-		
-		public function getView() {
+
+    /**
+     * @return AttributeTypeView
+     */
+    public function getView() {
 			$av = new AttributeTypeView($this->attributeType, $this->attributeKey, $this->attributeValue);
 			return $av;
 		}
-		
-		public function getSearchIndexFieldDefinition() {
+
+    /**
+     * @return mixed
+     */
+    public function getSearchIndexFieldDefinition() {
 			return $this->searchIndexFieldDefinition;
 		}
-		
-		public function setupAndRun($method) {
+
+    /**
+     * @param $method
+     */
+    public function setupAndRun($method) {
 			$args = func_get_args();
 			$args = array_slice($args, 1);
 			if ($method) {
@@ -144,16 +222,27 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		public function saveKey() {
+    /**
+     *
+     */
+    public function saveKey() {
 		
 		}
-		
-		public function duplicateKey() {
+
+    /**
+     *
+     */
+    public function duplicateKey() {
 		
 		}
 		
 		// return a string we can use to search by
-		public function searchKeywords($keywords, $list = false) {
+    /**
+     * @param $keywords
+     * @param bool $list
+     * @return string
+     */
+    public function searchKeywords($keywords, $list = false) {
 			$db = Loader::db();
 			$qkeywords = $db->quote('%' . $keywords . '%');
 			return 'ak_' . $this->attributeKey->getAttributeKeyHandle() . ' like '.$qkeywords.' ';
@@ -161,8 +250,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/* Automatically run when an attribute key is added or updated
 		* @return ValidationError
-		*/		
-		public function validateKey($args = false) {
+		*/
+    /**
+     * @param bool $args
+     * @return int
+     */
+    public function validateKey($args = false) {
 			if ($args == false) {
 				$args =  $this->post();
 			}

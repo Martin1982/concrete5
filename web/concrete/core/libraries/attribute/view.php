@@ -10,11 +10,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 	class Concrete5_Library_AttributeTypeView extends View {
-	
-		protected function getValue() {return $this->attributeValue;}
-		protected function getAttributeKey() {return $this->attributeKey;}
-		
-		public function action($action) {
+
+        /**
+         * @return mixed
+         */
+        protected function getValue() {return $this->attributeValue;}
+
+        /**
+         * @return mixed
+         */
+        protected function getAttributeKey() {return $this->attributeKey;}
+
+        /**
+         * @param string $action
+         * @return string
+         */
+        public function action($action) {
 			$uh = Loader::helper('concrete/urls');
 			$a = func_get_args();
 			$args = '';
@@ -28,8 +39,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$url .= '&action=' . $action . $args;
 			return $url;
 		}
-		
-		public function getAttributeTypeURL($filename = false) {
+
+        /**
+         * @param bool $filename
+         * @return string
+         */
+        public function getAttributeTypeURL($filename = false) {
 			$atHandle = $this->attributeType->getAttributeTypeHandle();
 			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $filename)) {
 				$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $filename;
@@ -50,8 +65,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return $url;
 		}
-		
-		public function __construct($attributeType, $attributeKey, $attributeValue) {
+
+        /**
+         * @param $attributeType
+         * @param $attributeKey
+         * @param $attributeValue
+         */
+        public function __construct($attributeType, $attributeKey, $attributeValue) {
 			$this->controller = $attributeType->getController();
 			$this->controller->setAttributeKey($attributeKey);
 			$this->controller->setAttributeValue($attributeValue);
@@ -59,8 +79,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->attributeKey = $attributeKey;
 			$this->attributeType = $attributeType;
 		}
-		
-		protected function getIncludeFile($view) {
+
+        /**
+         * @param $view
+         * @return string
+         */
+        protected function getIncludeFile($view) {
 			$atHandle = $this->attributeType->getAttributeTypeHandle();
 			if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $view . '.php')) {
 				$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $view . '.php';

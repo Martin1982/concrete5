@@ -112,6 +112,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
 		 * in order to make certain style attributes found inside editable
 		 * @param string $stylesheet
+         * @return string|true
 		 */
 		public function getStyleSheet($stylesheet) {
 			if ($this->isPreview()) {
@@ -444,12 +445,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionObject() {
 			return $this->c;
 		}
-		
-		/**
-		 * sets the collection object for the current view
-		 * @access public
-		 * @return void
-		*/
+
+        /**
+         * sets the collection object for the current view
+         * @access public
+         * @param $c
+         * @return void
+         */
 		public function setCollectionObject($c) {
 			$this->c = $c;
 		}
@@ -630,14 +632,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $ret;
 		}
 
-		/**
-		 * render's a fata error using the built-in view. This is currently only
-		 * used when the database connection fails
-		 * @access public
-		 * @param string $title
-		 * @param string $error
-		 * @return void
-		*/	
+        /**
+         * render's a fata error using the built-in view. This is currently only
+         * used when the database connection fails
+         * @access public
+         * @param string $title
+         * @param string $error
+         * @param null $errorObj
+         * @return void
+         */
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 

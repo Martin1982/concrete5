@@ -1,9 +1,17 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
+
+/**
+ * Class Concrete5_Library_Backup
+ */
 class Concrete5_Library_Backup {
 
-	public function execute($encrypt = false) {
+    /**
+     * @param bool $encrypt
+     * @throws Exception
+     */
+    public function execute($encrypt = false) {
 		$db = Loader::db();
 		if (!file_exists(DIR_FILES_BACKUPS)) {
 			mkdir(DIR_FILES_BACKUPS);
@@ -37,17 +45,41 @@ class Concrete5_Library_Backup {
 	
 }
 
+/**
+ * Class Concrete5_Library_Backup_BackupTable
+ */
 class Concrete5_Library_Backup_BackupTable {
    
    //Public Class members
-	public $str_createTableSql= "";
-	public $str_insertionSql= "";
+    /**
+     * @var string
+     */
+    public $str_createTableSql= "";
+    /**
+     * @var string
+     */
+    public $str_insertionSql= "";
 	//Private Class Members
-	private $db = "";
-	private $str_tablename= "";
-	private $arr_fields = Array();
-	private $arr_fieldtypes = Array();
-	private $rs_table;
+    /**
+     * @var ADOConnection|string
+     */
+    private $db = "";
+    /**
+     * @var string
+     */
+    private $str_tablename= "";
+    /**
+     * @var array
+     */
+    private $arr_fields = Array();
+    /**
+     * @var array
+     */
+    private $arr_fieldtypes = Array();
+    /**
+     * @var RecordSet
+     */
+    private $rs_table;
 	/**
 	* @desc class constructor, should load up the table information and create table sql and 
 	* insert statements
@@ -112,8 +144,11 @@ class Concrete5_Library_Backup_BackupTable {
 			$rs_createsql->close();
 		}
 	}
-	
-	public function generateDataInsertionSql() {
+
+    /**
+     *
+     */
+    public function generateDataInsertionSql() {
 		$this->rs_table->MoveFirst(); // Just in case 
 		while (!$this->rs_table->EOF) {
 			$arr_rowData = Array();

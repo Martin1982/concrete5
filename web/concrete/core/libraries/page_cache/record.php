@@ -2,9 +2,17 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * Class Concrete5_Library_PageCacheRecord
+ */
 class Concrete5_Library_PageCacheRecord {
-	
-	public function __construct(Page $c, $content, $lifetime) {
+
+    /**
+     * @param Page $c
+     * @param $content
+     * @param $lifetime
+     */
+    public function __construct(Page $c, $content, $lifetime) {
 		$cache = PageCache::getLibrary();
 		$this->setCacheRecordLifetime($lifetime);
 		$this->setCacheRecordKey($cache->getCacheKey($c));
@@ -12,39 +20,66 @@ class Concrete5_Library_PageCacheRecord {
 		$this->setCacheRecordContent($content);
 	}
 
-	public function setCacheRecordLifetime($lifetime) {
+    /**
+     * @param $lifetime
+     */
+    public function setCacheRecordLifetime($lifetime) {
 		$this->expires = time() + $lifetime;
 	}
 
-	public function getCacheRecordExpiration() {
+    /**
+     * @return mixed
+     */
+    public function getCacheRecordExpiration() {
 		return $this->expires;
 	}
 
-	public function setCacheRecordContent($content) {
+    /**
+     * @param $content
+     */
+    public function setCacheRecordContent($content) {
 		$this->content = $content;
 	}
 
-	public function getCacheRecordContent() {
+    /**
+     * @return mixed
+     */
+    public function getCacheRecordContent() {
 		return $this->content;
 	}
 
-	public function setCacheRecordHeaders($headers) {
+    /**
+     * @param $headers
+     */
+    public function setCacheRecordHeaders($headers) {
 		$this->headers = $headers;
 	}
 
-	public function getCacheRecordHeaders() {
+    /**
+     * @return mixed
+     */
+    public function getCacheRecordHeaders() {
 		return $this->headers;
 	}
 
-	public function getCacheRecordKey() {
+    /**
+     * @return mixed
+     */
+    public function getCacheRecordKey() {
 		return $this->cacheRecordKey;
 	}
 
-	public function setCacheRecordKey($cacheRecordKey) {
+    /**
+     * @param $cacheRecordKey
+     */
+    public function setCacheRecordKey($cacheRecordKey) {
 		$this->cacheRecordKey = $cacheRecordKey;
 	}
 
-	public function validate() {
+    /**
+     * @return bool
+     */
+    public function validate() {
 		$diff = $this->expires - time();
 		if ($diff > 0) {
 			// it's still valid
